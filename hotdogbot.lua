@@ -7,7 +7,7 @@ local active = false
 local floodTimeout = 1000
 local nearbyPlayerIds = {}
 local timedOutIds = {}
-local distance = 7.8
+local distance = 7.5
 
 function hasValue (tab, val)
   for index, value in ipairs(tab) do
