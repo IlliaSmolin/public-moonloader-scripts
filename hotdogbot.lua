@@ -1,22 +1,31 @@
-require 'lib.moonloader'
+script_name('Hot-Dog Bot')
+script_version("v0.2")
+script_description('Automatically proposes /selleat for each id in the selling radius')
+script_author('YoungDaggerD')
+
 local active = false
 local floodTimeout = 1000
-local playerIds = {}
+local nearbyPlayerIds = {}
+local timedOutIds = {}
 local distance = 7.8
 
-function tablelength(T)
-  local count = 0
-  for _ in pairs(T) do count = count + 1 end
-  return count
+function hasValue (tab, val)
+  for index, value in ipairs(tab) do
+    if value == val then
+      return true
+    end
+  end
+  return false
 end
 
 function activation()
 	active = not active
+	timedOutIds = {}
 	printString('Hot-Dog Bot: '..(active and '~g~activated' or '~r~disabled'), 1500)
 end
 
 function findNearbyPlayers()
-	playerIds = {}
+	nearbyPlayerIds = {}
 	local charsTable = getAllChars()
 	table.remove(charsTable, 1)
 
@@ -26,16 +35,19 @@ function findNearbyPlayers()
 		if getDistanceBetweenCoords3d(posX, posY, posZ, pPosX, pPosY, pPosZ) <= distance then
 			res, id = sampGetPlayerIdByCharHandle(v)
 			if res then
-				table.insert(playerIds, id)
+				table.insert(nearbyPlayerIds, id)
 			end
 		end
 	end
 end
 
-function feedNearbies()
-	for k,v in ipairs(playerIds) do
-		sampSendChat("/selleat "..v)
-		wait(floodTimeout)
+function feedPlayers()
+	for k,v in ipairs(nearbyPlayerIds) do
+		if not hasValue(timedOutIds, v) then
+			sampSendChat("/selleat "..v)
+			table.insert(timedOutIds, v)
+			wait(floodTimeout)
+		end
 	end
 end
 
@@ -48,13 +60,7 @@ function main()
 
 		if active then
 			findNearbyPlayers()
-
-			if tablelength(playerIds) == 0 then
-				wait(100)
-			else
-				feedNearbies()
-				wait(5000)
-			end
+			feedPlayers()
 		end
 	end
 end
