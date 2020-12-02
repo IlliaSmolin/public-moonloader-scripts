@@ -1,6 +1,6 @@
 script_name("GangSellButtons")
 script_description("Sell guns and drugs fast")
-script_version("v1.0")
+script_version("v1.1")
 script_authors("YoungDaggerD")
 
 local gunDistance = 10.0
@@ -10,7 +10,7 @@ local reportDistance = 50.0
 function main()
 	if not isSampfuncsLoaded() or not isSampLoaded() then return end
 	while not isSampAvailable() do wait(100) end
-	local font = renderCreateFont("Tahoma", 8, 5)
+	local font = renderCreateFont("Tahoma", 10, 5)
 	while true do
 		wait(0)
 		if not isPauseMenuActive() and isPlayerPlaying(PLAYER_HANDLE) and not sampIsChatInputActive() and not sampIsDialogActive() then
@@ -26,11 +26,14 @@ function main()
 						local pPosX, pPosY, pPosZ = getCharCoordinates(PLAYER_PED)
 						res, id = sampGetPlayerIdByCharHandle(v)
 						local wPosX, wPosY = convert3DCoordsToScreen(posX, posY, posZ)
-						if getDistanceBetweenCoords3d(posX, posY, posZ, pPosX, pPosY, pPosZ) <= reportDistance and k ~= 1 then
-							if drawClickableText(font, "send report", wPosX + 25, wPosY + 30, 0xFFFFFFFF, 0xFFFF0000) then
-								sendReport(id)
-							end
+						local sPosX, sPosY = convert3DCoordsToScreen(pPosX, pPosY, pPosZ)
+						
+						--get guns option only for player
+						if drawClickableText(font, "get guns", sPosX + 25, sPosY - 75, 0xFFFFFFFF, 0xFFFF0000) and k == 1 then
+							sampSendChat("/get guns")
 						end
+
+						--sell guns options
 						if getDistanceBetweenCoords3d(posX, posY, posZ, pPosX, pPosY, pPosZ) <= gunDistance then
 							if drawClickableText(font, "sell deagle: 50", wPosX + 25, wPosY - 60, 0xFFFFFFFF, 0xFFFF0000) then
 								sellGun(id, "deagle", 50)
@@ -45,6 +48,8 @@ function main()
 								sellGun(id, "m4", 100)
 							end
 						end
+
+						--selldrugs options
 						if getDistanceBetweenCoords3d(posX, posY, posZ, pPosX, pPosY, pPosZ) <= drugDistance and k ~= 1 then
 							if drawClickableText(font, "sell drugs: 50", wPosX + 25, wPosY, 0xFFFFFFFF, 0xFFFF0000) then
 								sellDrugs(id, 50)
@@ -53,6 +58,14 @@ function main()
 								sellDrugs(id, 100)
 							end
 						end
+
+						--report option
+						if getDistanceBetweenCoords3d(posX, posY, posZ, pPosX, pPosY, pPosZ) <= reportDistance and k ~= 1 then
+							if drawClickableText(font, "send report", wPosX + 25, wPosY + 30, 0xFFFFFFFF, 0xFFFF0000) then
+								sendReport(id)
+							end
+						end
+						
 					end
 				end
 				if wasKeyReleased(66) then sampSetCursorMode(0) end
