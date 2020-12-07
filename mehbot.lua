@@ -1,5 +1,5 @@
 script_name('Mech Bot')
-script_version("v1.0")
+script_version("v0.2")
 script_description('Automatically proposes /repair and /refill for each driver id in the radius')
 script_author('YoungDaggerD')
 
@@ -58,7 +58,7 @@ function servePlayers()
 	for k,v in ipairs(nearbyDriverIds) do
 		if not hasValue(timedOutIds, v) then
 			if tableLength(timedOutIds) >= 3 then
-				timedOutIds = {}
+				table.remove(timedOutIds, 1)
 			end
 			sendWithTimeOut("/repair "..v)
 			sendWithTimeOut("/refill "..v)
@@ -72,7 +72,7 @@ function main()
 	while not isSampAvailable() do wait(100) end
 	sampRegisterChatCommand('mb', activation)
 	while true do
-		wait(0)
+		wait(1000)
 
 		if active then
 			findNearbyDrivers()
