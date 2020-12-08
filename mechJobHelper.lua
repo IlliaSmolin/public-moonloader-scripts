@@ -1,5 +1,5 @@
 script_name("Mech job helper")
-script_description("repair and refill other drivers with 1 click")
+script_description("repair and refill other drivers with a click")
 script_version("v1.0")
 script_authors("YoungDaggerD")
 
