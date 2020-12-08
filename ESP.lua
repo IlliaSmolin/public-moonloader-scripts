@@ -1,6 +1,6 @@
-script_name("WH")
-script_description("Wall hack with info about enemies' health, shots to die from deagle, and with anti-screenshot mode")
-script_version("v1.5")
+script_name("ESP")
+script_description("ESP with info about enemies' health, shots to die from deagle, and anti-screenshot mode")
+script_version("v1.0")
 script_authors("YoungDaggerD")
 
 require 'lib.moonloader'
